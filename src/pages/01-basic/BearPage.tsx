@@ -1,3 +1,5 @@
+import { useShallow } from 'zustand/react/shallow';
+
 import { WhiteCard } from '../../components';
 import { useBearStore } from '../../stores';
 
@@ -14,6 +16,7 @@ export const BearPage = () => {
         <BlackBears />
         <PolarBears />
         <PandaBears />
+        <BearsDisplay />
       </div>
     </>
   );
@@ -68,3 +71,21 @@ export const PandaBears = () => {
     </WhiteCard>
   );
 };
+
+const BearsDisplay = () => {
+  // useShallow para evitar una nueva representación
+  // si el valor calculado siempre es superficialmente igual al anterior.
+  // no renderiza innecesariamente si no ha cambiado nada
+  const bears = useBearStore(useShallow((state) => state.bears));
+  const doNothing = useBearStore((state) => state.doNothing);
+  return (
+    <WhiteCard centered>
+      <h1 className='text-3xl'>Osos</h1>
+      <button onClick={doNothing}>Do nothing</button>
+
+      <pre>{JSON.stringify(bears, null, 2)}</pre>
+    </WhiteCard>
+  );
+};
+
+export default BearPage;
